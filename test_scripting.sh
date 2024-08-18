@@ -3,7 +3,7 @@
 # Test for valid commands
 echo "Testing valid commands"
 echo "ls" | ./simple_shell
-echo "/bin/ls" | ./simple_shell
+echo "/bin/ls" | ./simple_sshell
 echo "echo 'Hello World'" | ./simple_shell
 
 # Test for invalid commands
