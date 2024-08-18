@@ -97,6 +97,7 @@ int main(void)
 		nread = getline(&line, &len, stdin);
 		if (nread == -1)
 		{
+			printf("\n");
 			break;
 			/*ctrl + D = succes*/
 		}
@@ -107,6 +108,7 @@ int main(void)
 
 		if (line[0] != '\0')
 			execute_command(line);
+
 	}
 	free(line);
 
