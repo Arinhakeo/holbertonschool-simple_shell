@@ -97,7 +97,6 @@ int main(void)
 		nread = getline(&line, &len, stdin);
 		if (nread == -1)
 		{
-			free(line);
 			break;
 			/*ctrl + D = succes*/
 		}
