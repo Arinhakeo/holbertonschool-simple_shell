@@ -1,0 +1,27 @@
+# Binary files
+*.o
+*.out
+*.exe
+
+# Log files
+*.log
+
+# Build directories
+/build/
+/bin/
+/obj/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.d
+
+# IDE-generated files
+*.cproj
+*.user
+*.layout
+*.depend
+.idea/
+.vscode/
+.git
