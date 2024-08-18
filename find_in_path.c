@@ -16,10 +16,8 @@ char *find_command_path(const char *command)
 	{
 		if (access(command, X_OK) == 0)
 		{
-			printf("Found absolute path: %s\n", command);
 			return strdup(command);
 		}
-		printf("Absolute path not found: %s\n", command);
 		return NULL;
 	}
 
