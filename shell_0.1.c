@@ -98,7 +98,7 @@ int main(void)
 		if (nread == -1)
 		{
 			free(line);
-			exit(EXIT_SUCCESS);
+			break;
 			/*ctrl + D = succes*/
 		}
 
@@ -106,7 +106,8 @@ int main(void)
 		if (line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
 
-		execute_command(line);
+		if (line[0] != '\0') {
+			execute_command(line);
 	}
 	free(line);
 
