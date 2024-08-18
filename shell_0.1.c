@@ -3,8 +3,6 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-extern char **environ;
-
 /**
  * execute_command - execute command in a child process
  * @line: The command line to execute
@@ -28,7 +26,7 @@ void execute_command(char *line)
 	}
 	else if (pid == 0)
 	{
-		execve_check = execve(tokens[0], tokens, environ);
+		execve_check = execve(tokens[0], tokens, NULL);
 
 		if (execve_check == -1)
 		{
