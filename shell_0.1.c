@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
+extern char **environ;
 /**
  * execute_command - execute command in a child process
  * @line: The command line to execute
@@ -26,12 +27,13 @@ void execute_command(char *line)
 	}
 	else if (pid == 0)
 	{
-		execve_check = execve(tokens[0], tokens, NULL);
+		execve_check = execve(tokens[0], tokens, environ);
 
 		if (execve_check == -1)
 		{
 			/*display ./shell: No such file or directory */
 			perror(tokens[0]);
+
 			/*close child process in case of faillure*/
 			exit(EXIT_FAILURE);
 		}
