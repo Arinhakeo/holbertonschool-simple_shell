@@ -3,15 +3,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 
 extern char **environ;
 
 /**
- * free_arg_list - Frees a list of arguments.
- * @arg_list: List to free.
- */
+* free_arg_list - Frees a list of arguments.
+* @arg_list: List to free.
+*/
 void free_arg_list(char **arg_list)
 {
 int i;
@@ -23,10 +22,10 @@ free(arg_list);
 }
 
 /**
- * split_string - Splits a string into a list of arguments.
- * @line: The string to split.
- * Return: The list of arguments.
- */
+* split_string - Splits a string into a list of arguments.
+* @line: The string to split.
+* Return: The list of arguments.
+*/
 char **split_string(char *line)
 {
 int i, count = 0;
@@ -66,14 +65,14 @@ return (tokens);
 }
 
 /**
- * find_command_path - Finds the full path of a command.
- * @command: The command to find.
- * Return: The full path of the command, or NULL if not found.
- */
+* find_command_path - Finds the full path of a command.
+* @command: The command to find.
+* Return: The full path of the command, or NULL if not found.
+*/
 char *find_command_path(char *command)
 {
 char *path_env = getenv("PATH");
-char *path;
+char *path, *dup_path;
 char path_buffer[1024];
 struct stat st;
 
@@ -83,56 +82,40 @@ return (NULL);
 if (command[0] == '/' || command[0] == '.')
 {
 if (stat(command, &st) == 0)
-{
 return (strdup(command));
-}
 return (NULL);
 }
 
-path_env = strdup(path_env);
-path = strtok(path_env, ":");
+dup_path = strdup(path_env);
+path = strtok(dup_path, ":");
 while (path != NULL)
 {
 snprintf(path_buffer, sizeof(path_buffer), "%s/%s", path, command);
 if (stat(path_buffer, &st) == 0)
 {
-free(path_env);
+free(dup_path);
 return (strdup(path_buffer));
 }
 path = strtok(NULL, ":");
 }
-free(path_env);
+free(dup_path);
 return (NULL);
 }
 
 /**
- * execute_command - Executes a command in a child process.
- * @line: The command line to execute.
- */
-void execute_command(char *line)
+* execute_command - Executes a command in a child process.
+* @tokens: The tokenized command line arguments.
+*/
+void execute_command(char **tokens)
 {
-char **tokens = split_string(line);
 char *command_path;
 pid_t pid;
 int status;
-
-if (tokens == NULL || tokens[0] == NULL)
-{
-free_arg_list(tokens);
-return;
-}
-
-if (strcmp(tokens[0], "exit") == 0)
-{
-free_arg_list(tokens);
-exit(EXIT_SUCCESS);
-}
 
 command_path = find_command_path(tokens[0]);
 if (command_path == NULL)
 {
 fprintf(stderr, "./shell: %s: Command not found\n", tokens[0]);
-free_arg_list(tokens);
 return;
 }
 
@@ -141,7 +124,6 @@ if (pid == -1)
 {
 perror("fork");
 free(command_path);
-free_arg_list(tokens);
 exit(EXIT_FAILURE);
 }
 else if (pid == 0)
@@ -160,35 +142,23 @@ wait(&status);
 }
 
 free(command_path);
-free_arg_list(tokens);
 }
 
 /**
- * prompt - Displays the shell prompt.
- */
-void prompt(void)
-{
-write(STDOUT_FILENO, ":) ", 3);
-}
-
-/**
- * main - Runs the shell and processes user commands.
- * Description: Runs an infinite loop, reads user input,
- * and executes the corresponding command.
- * Return: 0 on success.
- */
+* main - Entry point of the shell program.
+* Return: Always 0.
+*/
 int main(void)
 {
 char *line = NULL;
 size_t len = 0;
 ssize_t nread;
+char **tokens;
 
 while (1)
 {
 if (isatty(STDIN_FILENO))
-{
-prompt();
-}
+write(STDOUT_FILENO, ":) ", 3);
 
 nread = getline(&line, &len, stdin);
 if (nread == -1)
@@ -200,10 +170,20 @@ exit(EXIT_SUCCESS);
 if (line[nread - 1] == '\n')
 line[nread - 1] = '\0';
 
-if (line[0] != '\0')
+tokens = split_string(line);
+if (tokens[0] != NULL)
 {
-execute_command(line);
+if (strcmp(tokens[0], "exit") == 0)
+{
+free_arg_list(tokens);
+free(line);
+exit(EXIT_SUCCESS);
 }
+
+execute_command(tokens);
+}
+
+free_arg_list(tokens);
 }
 
 free(line);
