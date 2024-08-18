@@ -1,5 +1,13 @@
 #include "shell.h"
 
+/**
+ * parse_line - Parses a line into an array of tokens
+ *
+ * @line: The line to be parsed
+ *
+ * Return: An array of tokens, or NULL on failure
+ */
+
 char **parse_line(char *line)
 {
 char *token;
@@ -14,7 +22,7 @@ position++;
 token = strtok(NULL, " \n");
 }
 tokens[position] = NULL;
-return tokens;
+return (tokens);
 }
 
 char *find_in_path(char *command)
@@ -34,12 +42,12 @@ strcat(full_path, command);
 if (stat(full_path, &st) == 0 && (st.st_mode & S_IXUSR))
 {
 free(path_copy);
-return full_path;
+return (full_path);
 }
 dir = strtok(NULL, ":");
 }
 
 free(path_copy);
 free(full_path);
-return NULL;
+return (NULL);
 }
