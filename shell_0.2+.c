@@ -6,13 +6,16 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+extern char **environ;
+
 /**
  * free_arg_list - Frees a list of arguments.
- * @arg_list: List to free.
+ * @arg_list: List of arguments to free.
  */
 void free_arg_list(char **arg_list)
 {
 int i;
+
 for (i = 0; arg_list[i] != NULL; i++)
 {
 free(arg_list[i]);
@@ -23,50 +26,44 @@ free(arg_list);
 /**
  * split_string - Splits a string into a list of arguments.
  * @line: The string to split.
- * @tokens: The array to store the arguments.
- * @max_tokens: Maximum number of tokens that can be stored.
- * Return: The number of tokens.
+ * Return: The list of arguments.
  */
-int split_string(char *line, char **tokens, int max_tokens)
+char **split_string(char *line)
 {
-int i = 0;
-int j = 0;
-int start = 0;
+int i, count = 0;
+char **tokens;
+char *token;
 
-while (line[i] != '\0' && j < max_tokens - 1)
+if (!line)
+return (NULL);
+
+for (i = 0; line[i]; i++)
 {
-if (line[i] == ' ' || line[i] == '\t')
-{
-if (i > start)
-{
-tokens[j] = malloc(i - start + 1);
-if (tokens[j] == NULL)
-{
-perror("malloc");
-exit(EXIT_FAILURE);
+if (line[i] == ' ')
+count++;
 }
-memcpy(tokens[j], line + start, i - start);
-tokens[j][i - start] = '\0';
-j++;
-}
-start = i + 1;
-}
-i++;
-}
-if (i > start)
-{
-tokens[j] = malloc(i - start + 1);
-if (tokens[j] == NULL)
+
+tokens = malloc((count + 2) * sizeof(char *));
+if (tokens == NULL)
 {
 perror("malloc");
 exit(EXIT_FAILURE);
 }
-memcpy(tokens[j], line + start, i - start);
-tokens[j][i - start] = '\0';
-j++;
+
+token = strtok(line, " ");
+for (i = 0; token != NULL; i++)
+{
+tokens[i] = strdup(token);
+if (tokens[i] == NULL)
+{
+perror("strdup");
+free_arg_list(tokens);
+exit(EXIT_FAILURE);
 }
-tokens[j] = NULL;
-return j;
+token = strtok(NULL, " ");
+}
+tokens[i] = NULL;
+return (tokens);
 }
 
 /**
@@ -77,48 +74,39 @@ return j;
 char *find_command_path(char *command)
 {
 char *path_env = getenv("PATH");
-char path_buffer[1024];
+char *path, path_buffer[1024];
 struct stat st;
-char *path_start;
-char *path_end;
 
 if (!command)
-return NULL;
+return (NULL);
 
 if (command[0] == '/' || command[0] == '.')
 {
 if (stat(command, &st) == 0)
-{
-return strdup(command);
-}
-return NULL;
+return (strdup(command));
+return (NULL);
 }
 
-path_start = path_env;
-while (path_start != NULL)
+path_env = strdup(path_env);
+if (path_env == NULL)
 {
-path_end = strchr(path_start, ':');
-if (path_end != NULL)
-{
-*path_end = '\0';
-path_end++;
+perror("strdup");
+exit(EXIT_FAILURE);
 }
-snprintf(path_buffer, sizeof(path_buffer), "%s/%s", path_start, command);
+
+path = strtok(path_env, ":");
+while (path != NULL)
+{
+snprintf(path_buffer, sizeof(path_buffer), "%s/%s", path, command);
 if (stat(path_buffer, &st) == 0)
 {
-if (path_end != NULL)
-{
-*path_end = ':';
+free(path_env);
+return (strdup(path_buffer));
 }
-return strdup(path_buffer);
+path = strtok(NULL, ":");
 }
-if (path_end == NULL)
-{
-break;
-}
-path_start = path_end;
-}
-return NULL;
+free(path_env);
+return (NULL);
 }
 
 /**
@@ -127,22 +115,15 @@ return NULL;
  */
 void execute_command(char *line)
 {
-char *tokens[64];
+char **tokens = split_string(line);
 char *command_path;
 pid_t pid;
 int status;
-int num_tokens;
 
-num_tokens = split_string(line, tokens, 64);
-if (num_tokens == 0 || tokens[0] == NULL)
-{
-return;
-}
-
-if (strcmp(tokens[0], "exit") == 0)
+if (tokens == NULL || tokens[0] == NULL)
 {
 free_arg_list(tokens);
-_exit(EXIT_SUCCESS);
+return;
 }
 
 command_path = find_command_path(tokens[0]);
@@ -159,7 +140,7 @@ if (pid == -1)
 perror("fork");
 free(command_path);
 free_arg_list(tokens);
-_exit(EXIT_FAILURE);
+exit(EXIT_FAILURE);
 }
 else if (pid == 0)
 {
@@ -181,14 +162,6 @@ free_arg_list(tokens);
 }
 
 /**
- * prompt - Displays the shell prompt.
- */
-void prompt(void)
-{
-write(STDOUT_FILENO, ":) ", 3);
-}
-
-/**
  * main - Runs the shell and processes user commands.
  * Return: 0 on success.
  */
@@ -201,9 +174,7 @@ ssize_t nread;
 while (1)
 {
 if (isatty(STDIN_FILENO))
-{
-prompt();
-}
+write(STDOUT_FILENO, ":) ", 3);
 
 nread = getline(&line, &len, stdin);
 if (nread == -1)
@@ -216,9 +187,7 @@ if (line[nread - 1] == '\n')
 line[nread - 1] = '\0';
 
 if (line[0] != '\0')
-{
 execute_command(line);
-}
 }
 
 free(line);
