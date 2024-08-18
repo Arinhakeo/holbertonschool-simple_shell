@@ -31,7 +31,7 @@ void execute_command(char *line)
 		if (execve_check == -1)
 		{
 			/*display ./shell: No such file or directory */
-			perror("./shell");
+			perror(tokens[0]);
 			/*close child process in case of faillure*/
 			exit(EXIT_FAILURE);
 		}
