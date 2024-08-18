@@ -6,72 +6,57 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 /**
- * parse_line - Parses a line into an array of tokens
- * @line: The line to be parsed
- * Return: An array of tokens
- */
-char **parse_line(char *line);
-
-/**
- * find_in_path - Finds a command in the PATH environment variable
- * @command: The command to find
- * Return: The full path to the command, or NULL if not found
- */
-char *find_in_path(char *command);
-
-/**
- * execute_command - Executes a command
- * @args: An array of arguments
- * Return: Void
+ * execute_command - Executes a command.
+ * @args: An array of strings representing the command and arguments.
  */
 void execute_command(char **args);
 
 /**
- * create_fork - Creates a child process
- * Return: The PID of the child process
+ * parse_line - Splits a line into an array of arguments.
+ * @line: The input line to parse.
+ * 
+ * Return: An array of strings containing the arguments.
  */
-pid_t create_fork(void);
+char **parse_line(char *line);
 
 /**
- * wait_for_child - Waits for a child process to terminate
- * @pid: The PID of the child process
- * Return: Void
- */
-void wait_for_child(pid_t pid);
-
-/**
- * display_prompt - Displays the shell prompt
- * Return: Void
+ * display_prompt - Displays the shell prompt.
  */
 void display_prompt(void);
 
 /**
- * print_pid - Prints the current process ID
- * Return: Void
+ * create_fork - Creates a new process using fork.
+ * 
+ * Return: The PID of the child process.
+ */
+pid_t create_fork(void);
+
+/**
+ * wait_for_child - Waits for a child process to finish.
+ * @pid: The PID of the child process to wait for.
+ */
+void wait_for_child(pid_t pid);
+
+/**
+ * print_pid - Prints the PID of the current process.
  */
 void print_pid(void);
 
 /**
- * print_ppid - Prints the parent process ID
- * Return: Void
+ * print_ppid - Prints the PPID of the current process.
  */
 void print_ppid(void);
 
 /**
- * print_env - Prints the environment variables
- * Return: Void
- */
-void print_env(void);
-
-/**
- * check_file_stat - Checks the file status
- * @path: The path to the file
- * Return: 1 if successful, 0 otherwise
+ * check_file_stat - Checks if a file exists and is executable.
+ * @path: The path to the file.
+ * 
+ * Return: 1 if the file is executable, 0 otherwise.
  */
 int check_file_stat(const char *path);
 
-#endif /* SHELL_H */
+#endif

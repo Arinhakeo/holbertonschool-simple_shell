@@ -1,12 +1,8 @@
 #include "shell.h"
 
 /**
- * print_ppid - Prints the parent process ID
- *
- * Description: This function gets the parent process ID using getppid()
- * and prints it to the standard output.
+ * print_ppid - Prints the PPID of the current process.
  */
-
 void print_ppid(void)
 {
 pid_t ppid = getppid();

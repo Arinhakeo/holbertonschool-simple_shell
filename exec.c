@@ -1,50 +1,29 @@
 #include "shell.h"
 
 /**
- * execute_command - Executes a given command
- *
- * @args: An array of arguments for the command
- *
- * Description: This function forks a child process, executes the command
- * using execve, and waits for the child process to finish.
+ * execute_command - Executes a command.
+ * @args: An array of strings representing the command and arguments.
  */
-
 void execute_command(char **args)
 {
-pid_t pid = fork();
+if (check_file_stat(args[0]))
+{
+pid_t pid = create_fork();
 if (pid == 0)
-{
-if (args[0][0] != '/')
-{
-char *command_path = find_in_path(args[0]);
-if (command_path != NULL)
-{
-if (execve(command_path, args, NULL) == -1)
-{
-perror("Error executing command");
-}
-free(command_path);
-}
-else
-{
-perror("Command not found");
-}
-}
-else
 {
 if (execve(args[0], args, NULL) == -1)
 {
-perror("Error executing command");
-}
-}
+perror("./shell");
 exit(EXIT_FAILURE);
 }
-else if (pid > 0)
-{
-wait(NULL);
 }
 else
 {
-perror("fork failed");
+wait_for_child(pid);
+}
+}
+else
+{
+fprintf(stderr, "./shell: No such file or directory\n");
 }
 }

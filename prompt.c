@@ -1,13 +1,9 @@
 #include "shell.h"
 
 /**
- * display_prompt - Displays the shell prompt
- *
- * Description: This function prints the standard shell prompt "$ "
- * to the standard output.
+ * display_prompt - Displays the shell prompt.
  */
-
 void display_prompt(void)
 {
-printf("$ ");
+printf("#cisfun$ ");
 }
