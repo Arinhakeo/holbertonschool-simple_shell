@@ -20,5 +20,5 @@ position++;
 token = strtok(NULL, " \n");
 }
 tokens[position] = NULL;
-return (tokens);
+return tokens;
 }

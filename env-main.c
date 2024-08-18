@@ -28,13 +28,17 @@ free(line);
 exit(EXIT_FAILURE);
 }
 }
+
 args = parse_line(line);
+
 if (args[0] != NULL)
 {
 execute_command(args);
 }
+
 free(args);
 }
+
 free(line);
-return (0);
+return 0;
 }

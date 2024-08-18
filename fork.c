@@ -13,5 +13,5 @@ if (pid < 0)
 perror("fork failed");
 exit(EXIT_FAILURE);
 }
-return (pid);
+return pid;
 }
