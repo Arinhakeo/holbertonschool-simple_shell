@@ -74,7 +74,7 @@ void execute_command(char *line)
 	{
 		if (execve(tokens[0], tokens, NULL) == -1)
 		{
-			perror("./shell");
+			perror(tokens[0]);
 			exit(EXIT_FAILURE);
 		}
 	}
