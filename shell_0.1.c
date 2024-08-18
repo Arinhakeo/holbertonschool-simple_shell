@@ -4,8 +4,6 @@
 #include <sys/wait.h>
 #include <string.h>
 
-extern char **environ;
-
 /**
  * free_arg_list - free a list of arguments
  * @arg_list: list to free
@@ -22,9 +20,17 @@ void free_arg_list(char **arg_list)
 	free(arg_list);
 }
 
+/**
+ * split_string - transform string on list of arguments
+ * @line: the string to split
+ * Description: count the numbers of delimiters (spaces), do an allocation
+ * for a list of arguments (tokens) copy every arguments in it
+ * Return: the list of arguments
+ */
 char **split_string(char *line)
 {
 	char **tokens = malloc(2 * sizeof(char *));
+
 	if (tokens == NULL)
 	{
 		exit(EXIT_FAILURE);
@@ -41,6 +47,11 @@ char **split_string(char *line)
 	return (tokens);
 }
 
+/**
+ * execute_command - execute command in a child process
+ * @line: The command line to execute
+ * Return: nothing
+ */
 void execute_command(char *line)
 {
 	char **tokens = split_string(line);
@@ -61,9 +72,9 @@ void execute_command(char *line)
 	}
 	else if (pid == 0)
 	{
-		if (execve(tokens[0], tokens, environ) == -1)
+		if (execve(tokens[0], tokens, NULL) == -1)
 		{
-			perror(tokens[0]);
+			perror("./shell");
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -97,7 +108,6 @@ int main(void)
 		nread = getline(&line, &len, stdin);
 		if (nread == -1)
 		{
-			printf("\n");
 			break;
 			/*ctrl + D = succes*/
 		}
