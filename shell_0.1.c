@@ -67,7 +67,6 @@ int main(void)
 		nread = getline(&line, &len, stdin);
 		if (nread == -1)
 		{
-			printf("\n");
 			free(line);
 			exit(EXIT_SUCCESS);
 			/*ctrl + D = succes*/
