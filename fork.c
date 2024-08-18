@@ -2,7 +2,6 @@
 
 /**
  * create_fork - Creates a new process using fork.
- * 
  * Return: The PID of the child process.
  */
 pid_t create_fork(void)
@@ -13,5 +12,5 @@ if (pid < 0)
 perror("fork failed");
 exit(EXIT_FAILURE);
 }
-return pid;
+return (pid);
 }

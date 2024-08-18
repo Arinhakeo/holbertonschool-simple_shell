@@ -1,20 +1,19 @@
 #!/bin/bash
 
-echo "Testing simple_shell"
-echo "Executing ls"
-./simple_shell << EOF
-ls
-exit
-EOF
+# Test for valid commands
+echo "Testing valid commands"
+echo "ls" | ./simple_shell
+echo "/bin/ls" | ./simple_shell
+echo "echo 'Hello World'" | ./simple_shell
 
-echo "Executing /bin/ls"
-./simple_shell << EOF
-/bin/ls
-exit
-EOF
+# Test for invalid commands
+echo "Testing invalid commands"
+echo "invalid_command" | ./simple_shell
+echo "/bin/invalid_command" | ./simple_shell
 
-echo "Executing ls -l /tmp"
-./simple_shell << EOF
-ls -l /tmp
-exit
-EOF
+# Test for EOF
+echo "Testing EOF (Ctrl+D)"
+echo "exit" | ./simple_shell
+
+# Clean up or additional tests
+echo "Performing cleanup or additional tests"
