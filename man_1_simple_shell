@@ -1,0 +1,23 @@
+.TH SIMPLE_SHELL 1 "August 2024" "1.0" "Simple Shell Manual"
+.SH NAME
+simple_shell \- simple UNIX command interpreter
+.SH SYNOPSIS
+.B simple_shell
+.SH DESCRIPTION
+.B simple_shell
+is a basic UNIX command interpreter. It reads commands from the user, executes them, and displays the results.
+
+Features:
+- Displays a prompt (`#cisfun$`).
+- Executes simple commands with no arguments.
+- Shows an error message if a command is not found.
+- Handles end of file (Ctrl+D) to exit.
+
+.SH USAGE
+Run the shell by executing:
+.B ./hsh
+
+Type commands at the prompt and press Enter to execute them. For example:
+.B /bin/ls
+.SH AUTHOR
+Your Name
