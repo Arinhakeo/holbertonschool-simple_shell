@@ -12,7 +12,7 @@
  */
 void execute_command(char *command, char **env)
 {
-	char **tokens = malloc(2 * sizeof(char *));
+	char *tokens[2];
 	pid_t pid;
 	int status;
 
@@ -37,8 +37,6 @@ void execute_command(char *command, char **env)
 	{
 		waitpid(pid, &status, 0);
 	}
-	free(tokens[0]);
-	free(tokens);
 }
 
 /**
