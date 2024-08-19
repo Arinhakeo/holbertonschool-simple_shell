@@ -5,28 +5,18 @@
 #include <string.h>
 
 /**
- * free_arg_list - free a list of arguments
- * @arg_list: list to free
+ * execute_command - create child procesus to execute command
+ * @command: command entered
+ * @env: actual environement
  * Return: nothing
  */
-void free_arg_list(char **arg_list)
-{
-	int i;
-
-	for (i = 0; arg_list[i]; i++)
-	{
-		free(arg_list[i]);
-	}
-	free(arg_list);
-}
-
-void execute_command(char *line, char **env)
+void execute_command(char *command, char **env)
 {
 	char *tokens[2];
 	pid_t pid;
 	int status;
 
-	tokens[0] = line;
+	tokens[0] = command;
 	tokens[1] = NULL;
 
 	pid = fork();
@@ -51,6 +41,9 @@ void execute_command(char *line, char **env)
 
 /**
  * main - Run a terminal and get user command
+ * @ac: useless here
+ * @av: useless here
+ * @env: actual environement
  * Description: Run an infinite loop, take the string entered by the user,
  * and then put it in a function to determine if it is a command or not.
  *
