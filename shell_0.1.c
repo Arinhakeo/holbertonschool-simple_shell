@@ -35,7 +35,7 @@ void execute_command(char *command, char **env)
 	}
 	else
 	{
-		wait(&status);
+		waitpid(pid, &status, 0);
 	}
 }
 
