@@ -12,11 +12,11 @@
  */
 void execute_command(char *command, char **env)
 {
-	char *tokens[2];
+	char **tokens = malloc(2 * sizeof(char *));
 	pid_t pid;
 	int status;
 
-	tokens[0] = command;
+	tokens[0] = strdup(command);
 	tokens[1] = NULL;
 
 	pid = fork();
@@ -37,6 +37,8 @@ void execute_command(char *command, char **env)
 	{
 		waitpid(pid, &status, 0);
 	}
+	free(tokens[0]);
+	free(tokens);
 }
 
 /**
@@ -82,6 +84,9 @@ int main(int ac, char **av, char **env)
 			continue;
 		}
 		execute_command(line, env);
+
+		if (!isatty(STDIN_FILENO))
+			break;
 	}
 	free(line);
 
