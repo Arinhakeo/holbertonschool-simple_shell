@@ -1,10 +1,9 @@
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <string.h>
-
-extern char **environ;
 
 /**
  * free_arg_list - free a list of arguments
