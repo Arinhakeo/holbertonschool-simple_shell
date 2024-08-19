@@ -16,7 +16,7 @@ void execute_command(char *command, char **env)
 	pid_t pid;
 	int status;
 
-	tokens[0] = strdup(command);
+	tokens[0] = command;
 	tokens[1] = NULL;
 
 	pid = fork();
