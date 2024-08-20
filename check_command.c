@@ -14,7 +14,7 @@ void command_checker(char *line, char **env)
 	if (!tokens)
 		return;
 
-	full_path = find_command_path(tokens[0]);
+	full_path = find_command_path(tokens[0], env);
 	if (full_path == NULL)
 	{
 		/* command not found*/
@@ -24,8 +24,6 @@ void command_checker(char *line, char **env)
 	}
 
 	execute_command(full_path, tokens, env);
-	free(full_path);
-	free_arg_list(tokens);
 }
 
 /**

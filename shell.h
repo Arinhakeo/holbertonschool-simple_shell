@@ -15,13 +15,11 @@ char **split_string(char *line);
 void execute_command(char *full_path, char **tokens, char **env);
 
 /*path*/
-char *find_command_path(const char *command);
-char *read_env_path(void);
-char *check_command_in_path(char *path_copy, const char *command);
-char *build_full_path(char *token, const char *command);
-int is_executable(const char *command);
+char *find_command_path(const char *command, char **env);
 
 /*free*/
 void free_arg_list(char **arg_list);
+
+int _strncmp(const char *s1, const char *s2, size_t n);
 
 #endif

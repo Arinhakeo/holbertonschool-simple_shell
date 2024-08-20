@@ -4,137 +4,83 @@
 /**
  * find_command_path - Finds the full path of a command using the PATH env var.
  * @command: The command to find.
+ * @env: Array of environment variables.
  *
  * Return: The full path of the command if found and executable, NULL otherwise.
  */
-char *find_command_path(const char *command)
+char *find_command_path(const char *command, char **env)
 {
-	char *path_env_ptr, *path_copy;
+	char *path = NULL;
+	char *path_copy;
+	char *dir;
+	char full_path[1024];
 
 	if (strchr(command, '/') != NULL)
 	{
-		if (is_executable(command))
+		if (access(command, X_OK) == 0)
 			return (strdup(command));
 		return (NULL);
 	}
 
-	path_env_ptr = read_env_path();
-	if (path_env_ptr == NULL)
-		return (NULL);
+	for (; *env; ++env)
+	{
+		if (_strncmp(*env, "PATH=", 5) == 0)
+		{
+			path = *env + 5;
+			break;
+		}
+	}
 
-	path_copy = strdup(path_env_ptr);
+	if (path == NULL)
+	{
+		return NULL;
+	}
+
+	/* Copy the PATH variable for tokenization */
+	path_copy = strdup(path);
 	if (path_copy == NULL)
-		return (NULL);
-
-	return (check_command_in_path(path_copy, command));
-}
-
-/**
- * read_env_path - Reads the PATH environment variable from /proc/self/environ.
- *
- * Return: Pointer to the PATH string or NULL if not found or on error.
- */
-char *read_env_path(void)
-{
-	static char path_env[PATH_ENV_SIZE];
-	int fd;
-	ssize_t bytes_read;
-	char *env_ptr, *path_start;
-
-	fd = open("/proc/self/environ", O_RDONLY);
-	if (fd == -1)
 	{
-		perror("open");
 		return NULL;
 	}
 
-	bytes_read = read(fd, path_env, sizeof(path_env) - 1);
-	if (bytes_read == -1)
+	/* Tokenize PATH and check each directory */
+	dir = strtok(path_copy, ":");
+	while (dir != NULL)
 	{
-		perror("read");
-		close(fd);
-		return NULL;
-	}
-
-	close(fd);
-	path_env[bytes_read] = '\0';
-
-	for (env_ptr = path_env; env_ptr < path_env + bytes_read; env_ptr += strlen(env_ptr) + 1)
-	{
-		if (strncmp(env_ptr, "PATH=", 5) == 0)
-		{
-			path_start = env_ptr + 5;
-			return path_start;
-		}
-	}
-
-	fprintf(stderr, "PATH not found\n");
-	return NULL;
-}
-/**
- * check_command_in_path - Searches for a command in the given PATH directories.
- * @path_copy: A copy of the PATH variable to search through.
- * @command: The command to find.
- *
- * Return: The full path of the command if found and executable, NULL otherwise.
- */
-char *check_command_in_path(char *path_copy, const char *command)
-{
-	char *token, *full_path;
-
-	token = strtok(path_copy, ":");
-	while (token != NULL)
-	{
-		full_path = build_full_path(token, command);
-		if (full_path == NULL)
+		sprintf(full_path, "%s/%s", dir, command);
+		if (access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
-			return (NULL);
+			return strdup(full_path); /* Return the full path of the command */
 		}
-
-		if (is_executable(full_path))
-		{
-			free(path_copy);
-			free(full_path);
-			return (full_path);
-		}
-
-		free(full_path);
-		token = strtok(NULL, ":");
+		dir = strtok(NULL, ":");
 	}
 
 	free(path_copy);
-	return (NULL);
+	return NULL; /* Command not found */
 }
 
 /**
- * build_full_path - Constructs the full path for a command in a directory.
- * @token: The directory from PATH.
- * @command: The command to append to the directory.
+ * _strncmp - Compare les premiers n caractères de deux chaînes.
+ * @s1: Première chaîne.
+ * @s2: Deuxième chaîne.
+ * @n: Nombre maximum de caractères à comparer.
  *
- * Return: A pointer to the newly allocated string containing the full path.
+ * Return: < 0 si s1 < s2, 0 si s1 == s2, > 0 si s1 > s2.
  */
-char *build_full_path(char *token, const char *command)
+int _strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t len;
-	char *full_path;
+    while (n && *s1 && *s2)
+    {
+        if (*s1 != *s2)
+            return ((unsigned char)*s1 - (unsigned char)*s2);
+        s1++;
+        s2++;
+        n--;
+    }
 
-	len = strlen(token) + strlen(command) + 2;
-	full_path = malloc(len);
-	if (full_path == NULL)
-		return (NULL);
+    if (n == 0)
+        return 0;
 
-	sprintf(full_path, "%s/%s", token, command);
-	return (full_path);
-}
-
-/**
- * is_executable - Checks if a file at the given path is executable.
- * @command: The path to the file.
- *
- * Return: 1 if executable, 0 otherwise.
- */
-int is_executable(const char *command)
-{
-	return (access(command, X_OK) == 0);
+    return ((unsigned char)*s1 - (unsigned char)*s2);
 }

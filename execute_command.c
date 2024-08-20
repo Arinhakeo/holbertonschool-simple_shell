@@ -36,5 +36,6 @@ void execute_command(char *full_path, char **tokens, char **env)
 	{
 		wait(&status);
 	}
+	free(full_path);
 	free_arg_list(tokens);
 }
