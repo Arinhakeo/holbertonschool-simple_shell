@@ -1,4 +1,3 @@
-#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -70,7 +69,7 @@ char **split_string(char *line)
  * @line: The command line to execute
  * Return: nothing
  */
-void execute_command(char *line)
+void execute_command(char *line, char **env)
 {
 	char **tokens = split_string(line);
 	pid_t pid;
@@ -90,7 +89,7 @@ void execute_command(char *line)
 	}
 	else if (pid == 0)
 	{
-		execve_check = execve(tokens[0], tokens, environ);
+		execve_check = execve(tokens[0], tokens, env);
 
 		if (execve_check == -1)
 		{
@@ -114,11 +113,14 @@ void execute_command(char *line)
  *
  * Return: 0 on exit succes or 1 on exit faillure
  */
-int main(void)
+int main(int ac, char **av, char **env)
 {
 	char *line = NULL;
 	size_t len = 0;
 	ssize_t nread;
+
+	(void)ac;
+	(void)av;
 
 	while (1)
 	{
@@ -139,7 +141,7 @@ int main(void)
 		if (line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
 
-		execute_command(line);
+		execute_command(line, env);
 	}
 	free(line);
 
