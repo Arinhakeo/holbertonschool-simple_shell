@@ -1,7 +1,22 @@
-
-# Mini Simple Shell
+# **Mini Simple Shell**
 
 'A mini command interpreter, perfect for learning the basics of systems programming.'
+- the story about the shell: [Ken Thompson](https://intranet.hbtn.io/rltoken/Pzs_A3Wo6LTHE8WX_uKiWg), [Thompson shell](https://intranet.hbtn.io/rltoken/FLRzIA3zLln5XV7erPHgsQ), [Unix shell](https://intranet.hbtn.io/rltoken/McTQ6qvcqZZQlZtZdjdVnQ).
+**- what is a shell?**
+
+A shell is a program that acts as an interface between the user and the operating system. It allows users to give commands to the computer and execute programs.
+
+**Main Functions of a Shell:**
+- Command Interpretation: The shell reads the commands entered by the user and interprets them.
+- Command Execution: It runs the requested programs and displays their results.
+- Process Management: The shell can create and manage processes to execute commands.
+**Types of Shell:**
+- Interactive Shell: Allows real-time interaction with the user (e.g., Bash, Zsh).
+- Non-Interactive Shell: Executes commands automatically from script files (e.g., run through shell scripts).
+**Example:**
+- When you type ls in a terminal, the shell executes the command to display the files and directories in the current directory.
+- In summary, a shell is like a translator between what you want to do and what the computer understands.
+
 ## Implemented Features
 -  The shell displays a prompt and waits for user input.
 - Command Execution: Commands entered by the user are executed using the execve system call.
@@ -10,6 +25,12 @@
 - Argument Processing: Commands can now include arguments.
 - PATH Management: The shell searches for executables in directories specified by the PATH environment variable.
 - Built-in Commands: Implementation of built-in commands such as exit to quit the shell and env to display environment variables.
+
+## File Structure
+- main.c: Entry point for the shell. Initializes the program and manages the main loop.
+- shell.c: Contains core functions to read, parse, and execute commands.
+- utils.c: Utility functions for command processing and PATH management.
+[Download Files](https://github.com/Arinhakeo/holbertonschool-simple_shell.git)
 ## Compilation
 
 The shell is compiled with the following options:
@@ -17,7 +38,7 @@ The shell is compiled with the following options:
 ```bash
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 ```
-Ensure that all files end with a newline and that the coding style conforms to Betty.    
+Ensure that all files end with a newline and that the coding style conforms to Betty.
 ## Usage
 ### Interactive Mode
 
@@ -26,18 +47,16 @@ Launch the shell in interactive mode with:
   ./hsh
 ```
 The prompt ($) will be displayed, and you can enter commands directly.
+![Logo](http://www.image-heberg.fr/files/1724182396663883860.png)
 
-### Non-Interactive Mode
+### Non-interactive mode
 You can also execute commands in non-interactive mode using redirection:
 ~~~~bash
 echo "/bin/ls" | ./hsh
 ~~~~
 The shell will execute the ls command and display the results.
 
-
-![Logo](http://www.image-heberg.fr/files/1724112230482249650.png)
-
-
+![Logo](http://www.image-heberg.fr/files/17241823121988314008.png)
 With this mini shell, you can run several types of commands:
 
 ### System Commands:
@@ -84,8 +103,9 @@ Environment Variable Support: Manage environment variables and allow modificatio
 
 ### Authors
 
-Jonathan Blin < 9288@horlbertonstudents.com >
-Arinhasvath Keophiphath < 9295@holbertonstudents.com >
+Jonathan Blin <9288@horlbertonstudents.com>
+Arinhasvath Keophiphath <9295@holbertonstudents.com>
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for more information.
+
