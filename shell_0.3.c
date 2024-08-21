@@ -2,8 +2,12 @@
 
 /**
  * main - Run a terminal and get user command
- * Description: Run an infinite loop, take the string entered by the user,
- * and then put it in a function to determine if it is a command or not.
+ * @ac: parametter no taked in charge
+ * @av:	parametter no taked in charge
+ * @env: array of environment variables
+ * Description: Run an infinite loop, take the string entered by the user
+ * and then put it in functions who will execute the command if it is a
+ * command enterred
  *
  * Return: 0 on exit succes or 1 on exit faillure
  */
@@ -18,9 +22,10 @@ int main(int ac, char **av, char **env)
 
 	while (1)
 	{
+		/*check if mode non_interactive*/
 		if (isatty(STDIN_FILENO))
 		{
-			printf("#cisfun$ ");
+			printf("$ ");
 		}
 
 		nread = getline(&line, &len, stdin);

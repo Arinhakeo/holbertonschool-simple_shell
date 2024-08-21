@@ -2,7 +2,9 @@
 
 /**
  * execute_command - execute command in a child process
- * @line: The command line to execute
+ * @full_path: take an absolute path of a function or NULL
+ * @tokens: arguments list
+ * @env : actual environement
  * Return: nothing
  */
 void execute_command(char *full_path, char **tokens, char **env)
@@ -22,11 +24,11 @@ void execute_command(char *full_path, char **tokens, char **env)
 	}
 	else if (pid == 0)
 	{
+		/*child process*/
 		execve_check = execve(full_path, tokens, env);
-
 		if (execve_check == -1)
 		{
-			/*display ./shell: No such file or directory */
+			/*print error on first argument*/
 			perror(tokens[0]);
 			/*close child process in case of faillure*/
 			exit(EXIT_FAILURE);

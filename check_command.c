@@ -2,29 +2,40 @@
 
 /**
  * command_checker - check if there is a command enterred
- * @line: texte entered in terminal
+ * @line: copy of stdin
+ * @env: array of environment variables
  * Description: search in the PATH file if the texte enterred
  * is a command
+ * Return: nothing
  */
 void command_checker(char *line, char **env)
 {
 	char *full_path;
 	char **tokens = split_string(line);
+	int is_builtin_func = 0;
 
 	if (!tokens)
 		return;
 
-	full_path = find_command_path(tokens[0], env);
-	if (full_path == NULL)
-	{
-		/* command not found*/
-		fprintf(stderr, "%s: command not found\n", tokens[0]);
-		free_arg_list(tokens);
-		return;
-	}
+	is_exit(tokens, 0, line);
+	is_builtin_func = is_env(tokens, env);
 
-	execute_command(full_path, tokens, env);
+	if (is_builtin_func == 0)
+	{
+		printf("jesuis rentré \n");
+		/*check if there is a command*/
+		full_path = find_command_path(tokens[0], env);
+		if (full_path == NULL)
+		{
+			/* command not found*/
+			fprintf(stderr, "%s: command not found\n", tokens[0]);
+			free_arg_list(tokens);
+			return;
+		}
+		execute_command(full_path, tokens, env);
+	}
 }
+
 
 /**
  * split_string - transform string on list of arguments
@@ -40,6 +51,7 @@ char **split_string(char *line)
 	char *token;
 	int count = 0;
 
+	/*count number of spaces*/
 	for (i = 0; line[i]; i++)
 	{
 		if (line[i] == ' ')
@@ -53,6 +65,7 @@ char **split_string(char *line)
 		exit(EXIT_FAILURE);
 	}
 
+	/*change line in argument list*/
 	token = strtok(line, " ");
 	for (i = 0; token != NULL; i++)
 	{

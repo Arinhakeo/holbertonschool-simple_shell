@@ -14,12 +14,21 @@ void command_checker(char *line, char **env);
 char **split_string(char *line);
 void execute_command(char *full_path, char **tokens, char **env);
 
-/*path*/
+/*path finder*/
 char *find_command_path(const char *command, char **env);
+int _strncmp(const char *s1, const char *s2, size_t n);
+char *_getenv(char **env);
 
 /*free*/
 void free_arg_list(char **arg_list);
 
-int _strncmp(const char *s1, const char *s2, size_t n);
+/*env function*/
+int is_env(char **tokens, char **env);
+
+/*exit function*/
+void is_exit(char **tokens, int exit_parameter, char *line);
+int _atoi(const char *str);
+
+
 
 #endif
