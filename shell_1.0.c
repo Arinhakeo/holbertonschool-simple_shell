@@ -42,6 +42,7 @@ int main(int ac, char **av, char **env)
 
 		command_checker(line, env);
 	}
+
 	free(line);
 	return (0);
 }

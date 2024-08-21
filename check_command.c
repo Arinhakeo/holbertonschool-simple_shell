@@ -22,7 +22,6 @@ void command_checker(char *line, char **env)
 
 	if (is_builtin_func == 0)
 	{
-		printf("jesuis rentré \n");
 		/*check if there is a command*/
 		full_path = find_command_path(tokens[0], env);
 		if (full_path == NULL)
@@ -65,6 +64,10 @@ char **split_string(char *line)
 		exit(EXIT_FAILURE);
 	}
 
+	while (*line == ' ')
+	{
+		line++;
+	}
 	/*change line in argument list*/
 	token = strtok(line, " ");
 	for (i = 0; token != NULL; i++)
