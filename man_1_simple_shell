@@ -1,23 +1,175 @@
-.TH SIMPLE_SHELL 1 "August 2024" "1.0" "Simple Shell Manual"
-.SH NAME
-simple_shell \- simple UNIX command interpreter
-.SH SYNOPSIS
-.B simple_shell
-.SH DESCRIPTION
-.B simple_shell
-is a basic UNIX command interpreter. It reads commands from the user, executes them, and displays the results.
+.Dd 22/08/2024
+.Dt Man(1)
+.Os Linux 22.04 LTS
+.TH SIMPLE_SHELL 1 "August 2023" "Simple Shell" "User Commands"
+.SH  NAME :
+.BR
 
-Features:
-- Displays a prompt (`#cisfun$`).
-- Executes simple commands with no arguments.
-- Shows an error message if a command is not found.
-- Handles end of file (Ctrl+D) to exit.
 
+.Nm simple_shell
+
+.B Last update :
+.Nd 22/08/2024
+
+
+.SH SYNOPSIS :
+.BR
+
+.B Simple UNIX command interpreter
+
+
+.B Compiled with GGC
+.B Library :
+.I #include <stdio.h>
+.B int main(int ac, char **av, char **env);
+
+
+.SH DESCRIPTION :
+.BR
+
+.Nm simple shell
+is a simple and interactive shell implemented in the C programming language.
+It allows users to enter commands and have them executed in a Linux/Unix
+environment. When the shell is launched, it displays a prompt `$` and waits for
+the user to enter a command. The shell reads the entered command, analyzes it,
+and executes it. It can handle both built-in commands (such as `env` and `exit`
+) and external commands available in the directories defined by the `PATH`
+environment variable.
+
+
+The shell operates in an interactive mode, but it can also be used in a
+non-interactive mode (for example, to execute shell scripts).
+
+
+.SH LIBRARIES USED :
+.BR
+
+.I #include <stdio.h>
+
+.I #include <stdlib.h>
+
+.I #include <unistd.h>
+
+.I #include <sys/wait.h>
+
+.I #include <string.h>
+
+.I #include <fcntl.h>
+
+.I #include "shell.h"
+
+
+.SH FUNCTIONS :
+.BR
+
+.TP
+.B int main(int ac, char **av, char **env)
+
+This is the core function of the shell. it runs an infinite loop, receives a
+string from stdin, and this string is passed to the next function.
+
+.TP
+.B command_checker(char *line, char **env)
+It is responsible for processing the command entered by the user. It performs
+the following steps.
+.BR
+
+1. It checks if the entered command is a built-in command (such as `env` or
+`exit`) by calling the `is_env()` and `is_exit()` functions.
+
+2. If it's not a built-in command, it searches for the full path of the command
+by calling `find_command_path()`.
+
+3. If the command is found, it executes it by calling `execute_command()`.
+
+
+.TP
+.B split_string(char *line)
+This function takes a string (`line`) representing the command entered by the
+user and transforms it into a list of arguments (tokens). It dynamically
+allocates the memory required to store these arguments.
+
+
+.TP
+.B execute_command(char *full_path, char **tokens, char **env)
+This function is responsible for executing an external command.
+It creates a new child process using `fork()`, then calls `execve()`
+in the child process to execute the command with the passed arguments.
+The parent process waits for the command's execution to complete with `wait()`.
+
+
+.TP
+.B find_command_path(const char *command, char **env)
+This function searches for the full path of a command by traversing the
+directories defined by the `PATH` environment variable. If the command is
+not found, it returns `NULL`.
+
+
+.TP
+.B is_env(char **tokens, char **env)
+This function handles the built-in `env` command. If the entered command
+is `env`, it displays all the environment variables.
+
+
+.TP
+.B is_exit(char **tokens, int exit_parameter, char *line)
+This function handles the built-in `exit` command. If the entered command is
+`exit`, it exits the shell using the provided exit code (or 0 if no code
+is specified).
+
+
+.TP
+.B free_arg_list(char **arg_list)
+This function frees the memory allocated for a list of arguments.
+
+
+.TP
+.B _getenv(char **env)
+This function searches for the value of the `PATH` environment variable.
+
+
+.TP
+.B _strncmp(const char *s1, const char *s2, size_t n)
+This function compares the first `n` characters of two strings `s1` and `s2`.
+
+
+.TP
+.B _atoi(const char *str)
+This function converts a string to an integer.
+
+
+.SH ENVIRONMENT
+.BR
+
+The shell uses the `PATH` environment variable to search for external commands
+to execute.
+.SH RETURN VALUE
+The shell returns 0 on success, and a non-zero value on failure.
 .SH USAGE
-Run the shell by executing:
-.B ./hsh
-
-Type commands at the prompt and press Enter to execute them. For example:
-.B /bin/ls
+To use the shell, launch it from a terminal:
+.nf
+$ ./simple_shell
+$
+.fi
+You can then enter commands, which will be executed by the shell. To exit the shell, type the `exit` command.
+In non-interactive mode, you can also execute shell scripts by passing them as arguments when launching the program:
+.nf
+$ ./simple_shell script.sh
+.fi
+In this case, the shell will read and execute the commands contained in the `script.sh` file.
+.SH EXAMPLES
+Here are some examples of using the shell:
+Execute an external command:
+.nf
+$ ls -l
+.fi
+Execute the built-in `env` command:
+.nf
+$ env
+.fi
+Exit the shell with a custom exit code:
+.nf
+$ exit 42
+.fi
 .SH AUTHOR
-Your Name
+This shell was developed by Jonathan BLIN & Arinhasvath KEOPHIPHATH.

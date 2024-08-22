@@ -1,6 +1,7 @@
-# **Mini Simple Shell**
 
-'A mini command interpreter, perfect for learning the basics of systems programming.'
+# **Simple Shell**
+
+'A mini command interpreter.
 - the story about the shell: [Ken Thompson](https://intranet.hbtn.io/rltoken/Pzs_A3Wo6LTHE8WX_uKiWg), [Thompson shell](https://intranet.hbtn.io/rltoken/FLRzIA3zLln5XV7erPHgsQ), [Unix shell](https://intranet.hbtn.io/rltoken/McTQ6qvcqZZQlZtZdjdVnQ).
 **- what is a shell?**
 
@@ -93,6 +94,11 @@ System calls like `execve`, `fork`, and `wait` are used to execute programs, cre
 Redirection and Pipes: Implement advanced features such as output redirection and piping.
 Environment Variable Support: Manage environment variables and allow modification from the shell.
 
+### Bugs connus
+- arguments passé a l'execution (ac/av) non pris en compte.
+- multiples commandes non pris en charge en mode non-interactif.
+- segmentation fault in case of only spaces given.
+
 ## Links and References
 
 - [GNU GCC Documentation](https://gcc.gnu.org/onlinedocs/)
@@ -107,5 +113,4 @@ Jonathan Blin <9288@horlbertonstudents.com>
 Arinhasvath Keophiphath <9295@holbertonstudents.com>
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more information.
-
+This project is open source.
