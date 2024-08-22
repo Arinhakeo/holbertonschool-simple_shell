@@ -94,10 +94,10 @@ System calls like `execve`, `fork`, and `wait` are used to execute programs, cre
 Redirection and Pipes: Implement advanced features such as output redirection and piping.
 Environment Variable Support: Manage environment variables and allow modification from the shell.
 
-### Bugs connus
-- arguments passé a l'execution (ac/av) non pris en compte.
-- multiples commandes non pris en charge en mode non-interactif.
-- segmentation fault in case of only spaces given.
+### Known Bugs
+Arguments passed at execution (ac/av) are not considered.
+Multiple commands not supported in non-interactive mode.
+Segmentation fault when only spaces are given.
 
 ## Links and References
 
