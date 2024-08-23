@@ -97,7 +97,7 @@ Environment Variable Support: Manage environment variables and allow modificatio
 ### Known Bugs
 Arguments passed at execution (ac/av) are not considered.
 Multiple commands not supported in non-interactive mode.
-Segmentation fault when only spaces are given.
+when only spaces are given, you may have an invalid error message
 
 ## Links and References
 

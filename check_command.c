@@ -11,9 +11,26 @@
 void command_checker(char *line, char **env)
 {
 	char *full_path;
-	char **tokens = split_string(line);
+	char **tokens;
+	char *line_copy = line;
 	int is_builtin_func = 0;
 
+	/*handle string with only spaces*/
+	while (*line_copy == ' ')
+		line_copy++;
+
+	if (*line_copy)
+	{
+		while (*line == ' ')
+			line++;
+	}
+	else
+	{
+		perror("no command found");
+		return;
+	}
+
+	tokens = split_string(line);
 	if (!tokens)
 		return;
 
@@ -64,10 +81,6 @@ char **split_string(char *line)
 		exit(EXIT_FAILURE);
 	}
 
-	while (*line == ' ')
-	{
-		line++;
-	}
 	/*change line in argument list*/
 	token = strtok(line, " ");
 	for (i = 0; token != NULL; i++)
