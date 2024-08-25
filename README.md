@@ -48,7 +48,7 @@ Launch the shell in interactive mode with:
   ./hsh
 ```
 The prompt ($) will be displayed, and you can enter commands directly.
-![Logo](http://www.image-heberg.fr/files/1724182396663883860.png)
+![Logo](flowchart/interactive_mode%20.png)
 
 ### Non-interactive mode
 You can also execute commands in non-interactive mode using redirection:
@@ -57,7 +57,7 @@ echo "/bin/ls" | ./hsh
 ~~~~
 The shell will execute the ls command and display the results.
 
-![Logo](http://www.image-heberg.fr/files/17241823121988314008.png)
+![Logo](flowchart/non_interactive_mode.png)
 With this mini shell, you can run several types of commands:
 
 ### System Commands:
